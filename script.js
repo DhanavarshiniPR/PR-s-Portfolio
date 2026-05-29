@@ -485,7 +485,6 @@ function add3DTiltEffect(cards) {
 // Apply 3D tilt to project and achievement cards after they're set up
 setTimeout(() => {
     add3DTiltEffect(document.querySelectorAll('.project-card'));
-    add3DTiltEffect(document.querySelectorAll('.achievement-card'));
 }, 500);
 
 // ============================================
