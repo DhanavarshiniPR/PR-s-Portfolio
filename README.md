@@ -95,3 +95,5 @@ Continuously improve problem-solving and development skills
 ~ " Thank You for Visiting! "
 
 If you like my work, feel free to connect with me and explore my projects. Feedback and collaboration opportunities are always welcome! 🚀
+
+Get in touch with me through your thoughts and ideas through below bottom form

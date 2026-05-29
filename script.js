@@ -192,28 +192,107 @@ skillBars.forEach(bar => {
 });
 
 // ============================================
-// Contact Form
+// Contact Form — Web3Forms (free, static-site friendly)
+// Get your access key: https://web3forms.com → enter your email → copy key
 // ============================================
 
-const contactForm = document.getElementById('contact-form');
+const CONTACT_CONFIG = {
+    web3formsAccessKey: 'a6643f22-4f63-4b6b-8a43-844312982927',
+    fallbackEmail: 'dhanavarshinipr@gmail.com',
+};
 
-contactForm.addEventListener('submit', (e) => {
+const contactForm = document.getElementById('contact-form');
+const formStatus = document.getElementById('form-status');
+
+function showFormStatus(message, type = 'info') {
+    if (!formStatus) return;
+    formStatus.textContent = message;
+    formStatus.className = `form-status form-status--${type}`;
+}
+
+function clearFormStatus() {
+    if (!formStatus) return;
+    formStatus.textContent = '';
+    formStatus.className = 'form-status';
+}
+
+async function handleContactSubmit(e) {
     e.preventDefault();
-    
-    // Get form data
+    clearFormStatus();
+
     const formData = new FormData(contactForm);
-    const data = Object.fromEntries(formData);
-    
-    // Here you would typically send the data to a server
-    // For now, we'll just show a success message
-    console.log('Form submitted:', data);
-    
-    // Show success message (you can customize this)
-    alert('Thank you for your message! I\'ll get back to you soon.');
-    
-    // Reset form
-    contactForm.reset();
-});
+
+    if (formData.get('botcheck')) {
+        return;
+    }
+
+    if (!CONTACT_CONFIG.web3formsAccessKey) {
+        showFormStatus(
+            `Form not set up yet. Please email ${CONTACT_CONFIG.fallbackEmail} directly, or add your free Web3Forms key in script.js.`,
+            'error'
+        );
+        return;
+    }
+
+    const submitBtn = contactForm.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    const originalBackground = submitBtn.style.background;
+
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="loading"></span> Sending...';
+
+    const payload = {
+        access_key: CONTACT_CONFIG.web3formsAccessKey,
+        name: formData.get('name'),
+        email: formData.get('email'),
+        subject: `[Portfolio] ${formData.get('subject')}`,
+        message: formData.get('message'),
+        from_name: 'Portfolio — Dhanavarshini PR',
+        replyto: formData.get('email'),
+    };
+
+    try {
+        const response = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+            body: JSON.stringify(payload),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || 'Unable to send message');
+        }
+
+        contactForm.reset();
+        submitBtn.textContent = 'Message Sent! ✓';
+        submitBtn.style.background = '#10b981';
+        showFormStatus('Thank you! Your message was sent — I will get back to you soon.', 'success');
+
+        setTimeout(() => {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalText;
+            submitBtn.style.background = originalBackground;
+            clearFormStatus();
+        }, 5000);
+    } catch (error) {
+        console.error('Contact form error:', error);
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalText;
+        submitBtn.style.background = originalBackground;
+        showFormStatus(
+            `Could not send message. Please try again or email ${CONTACT_CONFIG.fallbackEmail} directly.`,
+            'error'
+        );
+    }
+}
+
+if (contactForm) {
+    contactForm.addEventListener('submit', handleContactSubmit);
+}
 
 // ============================================
 // Parallax Effect for Hero Section
@@ -517,37 +596,7 @@ formInputs.forEach(input => {
     });
 });
 
-// Enhanced form submission with loading state
-contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    const submitBtn = contactForm.querySelector('button[type="submit"]');
-    const originalText = submitBtn.textContent;
-    
-    // Show loading state
-    submitBtn.disabled = true;
-    submitBtn.innerHTML = '<span class="loading"></span> Sending...';
-    
-    // Simulate form submission (replace with actual API call)
-    setTimeout(() => {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Message Sent! ✓';
-        submitBtn.style.background = '#10b981';
-        
-        // Reset form
-        contactForm.reset();
-        
-        // Reset button after 3 seconds
-        setTimeout(() => {
-            submitBtn.textContent = originalText;
-            submitBtn.style.background = '';
-        }, 3000);
-    }, 1500);
-});
-
-// ============================================
-// Image fade-in (skip project cards — parent handles visibility)
-// ============================================
+// Contact form validation feedback (submit handled above)
 
 function revealImage(img) {
     img.style.opacity = '1';
