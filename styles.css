@@ -1759,13 +1759,14 @@ section {
 .achievement-title-overlay {
     color: #ffffff;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
-    font-size: clamp(1.25rem, 4vw, 2rem);
+    font-size: clamp(1rem, 3.5vw, 1.75rem);
     font-weight: 700;
     margin: 0;
     padding: 0;
     text-align: center;
     line-height: 1.2;
-    word-break: break-word;
+    white-space: nowrap;
+    word-break: keep-all;
 }
 
 .achievement-content {
@@ -2326,6 +2327,10 @@ section {
 @media (min-width: 1100px) {
     .achievements-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .achievement-title-overlay {
+        font-size: clamp(0.8rem, 1.1vw, 1.15rem);
     }
 }
 
