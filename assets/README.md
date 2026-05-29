@@ -10,7 +10,7 @@ Place these files in this folder (same names as in `index.html`):
 | `smartpoultry.jpg` | SMART POULTRY project |
 | `travelblog.jpg` | TRAVEL GUIDES project |
 | `coding.jpg` | Achievements (if referenced) |
-| `hackathon.jpg` | Achievements (if referenced) |
+| `hail26.jpeg` | HAIL 2026 — Hexaware Hackathon achievement |
 
 If a project image is missing, the browser shows a placeholder message.
 
